@@ -1,0 +1,1 @@
+var audios=[{label:'aeSchwarzenBildschirm',path:'audio/aeSchwarzenBildschirm.ogg'},{label:'sonniee',path:'audio/sonniee.ogg'},{label:'zweehunderPuls',path:'audio/zweehunderPuls.ogg'}]

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+     HTML-Nippelboard
+    </title>
+    
+<style type="text/css">
+
+#player {
+	padding: 40px 10px 10px 10px;
+	width: 500px;
+	height: 200px;
+	background-image: url(images/audio_volume_high.png);
+}
+#audio_controller {
+	margin-top: 15px;
+	text-align: center;
+}
+#audio_container {
+	margin-top: 15px;
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+}
+#buttons {
+	margin-top: 15px;
+	padding: 2px;
+	border: 3px dashed green;
+}
+
+#time {
+	margin: 0;
+	padding: 5px;
+	width: 350px;
+	font-family: Helvetica, Arial, sans-serif
+	font-size: .7em;
+	color: #000000;
+	background-color: #ccc;
+}
+</style>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="jquery.ui.min.js"></script>
+<script type="text/javascript" src="data.js"></script>
+<script type="text/javascript">
+
+var audio;
+var seekbar;
+var btn_play;
+
+window.onload = function(){
+
+	for(i=0;i<audios.length;i++){
+	 $('<input type="button" value="'+audios[i].label+'" onclick="audio.src=\''+audios[i].path+'\';btn_play.click()"/>').appendTo('#buttons');
+	}
+	audio = document.getElementsByTagName("audio")[0];
+	audio.src=audios[0].path
+	btn_play = document.getElementById("btn_play");
+	var btn_pause = document.getElementById("btn_pause");
+	var btn_mute = document.getElementById("btn_mute");
+	seekbar = document.getElementById("seekbar");
+
+	btn_play.addEventListener('click', doPlay, false);
+	btn_pause.addEventListener('click', doPause, false);
+
+    audio.addEventListener('timeupdate', updateTime, false);
+    audio.addEventListener('durationchange', initSeekBar, false);
+    seekbar.addEventListener('change', changeTime, false);
+};
+
+function initSeekBar() {
+  seekbar.min = 0;
+  seekbar.max = audio.duration;
+}
+
+function changeTime() {
+  audio.currentTime = seekbar.value;
+}
+
+function updateTime(){
+	var sec= audio.currentTime;
+	var h = Math.floor(sec/3600);
+	sec=sec%3600;
+	var min =Math.floor(sec/60);
+	sec = Math.floor(sec%60);
+
+    if (sec.toString().length < 2) sec="0"+sec;
+	if (min.toString().length < 2) min="0"+min;
+	
+	document.getElementById('time').innerHTML = h+":"+min+":"+sec;
+
+	seekbar.min = audio.startTime;
+	seekbar.max = audio.duration;
+	seekbar.value = audio.currentTime;
+}
+
+function doPlay(){
+	if (audio.paused){
+		audio.play();
+	} else if (audio.ended)	{
+		audio.currentTime=0;
+		audio.play();
+	};
+};
+
+function doPause(){
+	if (audio.play){
+		audio.pause();
+	};
+};
+
+</script>
+</head>
+
+<body>
+
+<section id="player">
+	<div id="audio_container">
+		<audio controls>
+			<source src="audio/aeSchwarzenBildschirm.ogg" type="audio/ogg">
+			Your browser does not support the new HTML5 audio element
+		</audio>
+	</div>
+
+	<div id="audio_controller">
+		<button id="btn_play"> Play </button>
+		<button id="btn_pause"> Pause </button>
+		<input type="range" step="any" id="seekbar">
+		<label id="time">-:--:--</label>
+	</div>
+	<section id="buttons">
+
+	</section>
+</section>
+</body>
+</html>
